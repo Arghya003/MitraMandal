@@ -144,5 +144,67 @@ const followUser=async(req,res)=>{
 
 }
 
+// Update user(user self updates)
 
-export {signupUser,loginUser,logoutUser,followUser}
+const updateUser = async (req, res) => {
+  const { name, email, username, password, bio } = req.body;
+  let { profilePic } = req.body;
+
+  const userId = req.user._id;
+  try {
+    let user = await User.findById(userId);
+    if (!user) return res.status(400).json({ error: "User not found" });
+
+    if (req.params.id !== userId.toString())
+      return res
+        .status(400)
+        .json({ error: "You cannot update other user's profile" });
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      user.password = hashedPassword;
+    }
+
+  
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.username = username || user.username;
+    user.profilePic = profilePic || user.profilePic;
+    user.bio = bio || user.bio;
+
+    user = await user.save();
+
+    // Find all posts that this user replied and update username and userProfilePic fields
+   
+
+    // password should be null in response
+    user.password = null;
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error in updateUser: ", err.message);
+  }
+};
+
+// Get User Profile
+
+const getUserProfile=async(req,res)=>{
+    const {username}=req.params
+    try{
+        const user= await User.findOne({ username}).select("-password").select("-updatedAt");
+
+        if(!user) return res.json({message:"User Not Found"})
+         res.status(200).json(user);
+
+    }
+    catch(e){
+        res.status(500).json({ error: err.message });
+        console.log("Error in GetProfileUser: ", err.message);
+    }
+
+}
+
+export {signupUser,loginUser,logoutUser,followUser,updateUser,getUserProfile}
