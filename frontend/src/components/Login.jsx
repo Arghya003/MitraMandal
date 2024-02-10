@@ -18,11 +18,43 @@ import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useSetRecoilState } from 'recoil'
 import authScreenAtom from '../atoms/authAtom'
-
+import userAtom from '../atoms/userAtom'
+import useShowToast from '../Hooks/useShowToast'
 export default function LoginCard() {
+    const showToast=useShowToast()
     const [showPassword, setShowPassword] = useState(false)
-    const setAuthState=useSetRecoilState(authScreenAtom)
+    const setAuthState = useSetRecoilState(authScreenAtom)
+    const setUser = useSetRecoilState(userAtom);
+    const [inputs,setInputs]=useState({
+        username:"",
+        password:""
+    }
+    )
+    const handleLogin=async()=>{
+        try{
+                const res=await fetch("/api/users/login",{
+                    method:"POST",
+                    headers:{
+                        "Content-Type":"application/json"
 
+                    },
+                    body:JSON.stringify(inputs)
+                })
+                const data=await res.json();
+                if(data.error){
+                    showToast("Error",data.error,"error")
+                    return;
+                }
+            localStorage.setItem("user-threads", JSON.stringify(data));
+            setUser(data);
+        }
+        catch(e){
+                console.log(e)
+                showToast("Error",e,"error")
+        }
+
+    }
+    
     return (
         <Flex
 
@@ -51,7 +83,7 @@ export default function LoginCard() {
                             <Box>
                                 <FormControl isRequired>
                                     <FormLabel>UserName</FormLabel>
-                                    <Input type="text" />
+                                <Input value={inputs.username} onChange={(e) => setInputs({ ...inputs, username: e.target.value })}  type="text" />
                                 </FormControl>
                             </Box>
                       
@@ -59,7 +91,7 @@ export default function LoginCard() {
                         <FormControl isRequired>
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
-                                <Input type={showPassword ? 'text' : 'password'} />
+                                <Input value={inputs.password} onChange={(e) => setInputs({ ...inputs, password: e.target.value })}type={showPassword ? 'text' : 'password'} />
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
@@ -77,7 +109,8 @@ export default function LoginCard() {
                                 color={'white'}
                                 _hover={{
                                     bg: useColorModeValue("gray.700", "gray.800"),
-                                }}>
+                                }}
+                                onClick={handleLogin}>
                                 Login
                             </Button>
                         </Stack>
