@@ -150,45 +150,51 @@ const followUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const { name, email, username, password, bio} = req.body;
- let {profilePic}=req.body
+  const { name, email, username, password, bio } = req.body;
+  let { profilePic } = req.body
 
   const userId = req.user._id;
   try {
-    let user = await User.findById(userId);
-    if (!user) return res.status(400).json({ error: "User not found" });
+    if (req.params.id !== userId.toString()) {
+      return res.status(400).json({ error: "You cannot update other user's profile" });
+    }
 
-    if (req.params.id !== userId.toString())
-      return res
-        .status(400)
-        .json({ error: "You cannot update other user's profile" });
+    let updates = {};
 
     if (password) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-      user.password = hashedPassword;
+      updates.password = hashedPassword;
     }
 
     if (profilePic) {
-      if (user.profilePic) {
+      if (updates.profilepic) {
         await cloudinary.uploader.destroy(
-          user.profilePic.split("/").pop().split(".")[0]
+          updates.profilePic.split("/").pop().split(".")[0]
         );
       }
-
       const uploadedResponse = await cloudinary.uploader.upload(profilePic);
-      profilePic = uploadedResponse.secure_url;
+      updates.profilepic = uploadedResponse.secure_url;
     }
-    console.log(profilePic)
 
-    user.name = name || user.name;
-    user.email = email || user.email;
-    user.username = username || user.username;
-    user.profilePic = profilePic||user.profilePic ;
     
-    user.bio = bio || user.bio;
+    if (name) updates.name = name;
+    if (email) updates.email = email;
+    if (username) updates.username = username;
+    if (bio) updates.bio = bio;
 
-    user = await user.save();
+    const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+
+    // password should be null in response
+    user.password = null;
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+    console.log("Error in updateUser: ", err.message);
+  }
+};
+
 
     // Find all posts that this user replied and update username and userProfilePic fields
     // await Post.updateMany(
@@ -203,14 +209,7 @@ const updateUser = async (req, res) => {
     // );
 
     // password should be null in response
-    user.password = null;
-
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-    console.log("Error in updateUser: ", err.message);
-  }
-};
+    
 
 const getSuggestedUsers = async (req, res) => {
   try {
