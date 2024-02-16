@@ -8,19 +8,19 @@ import mongoose from "mongoose";
 const getUserProfile = async (req, res) => {
   // We will fetch user profile either with username or userId
   // query is either username or userId
-  const { query } = req.params;
+  const { username} = req.params;
 
   try {
     let user;
 
     // query is userId
-    if (mongoose.Types.ObjectId.isValid(query)) {
+    if (mongoose.Types.ObjectId.isValid(username)) {
       user = await User.findOne({ _id: query })
         .select("-password")
         .select("-updatedAt");
     } else {
       // query is username
-      user = await User.findOne({ username: query })
+      user = await User.findOne({ username})
         .select("-password")
         .select("-updatedAt");
     }
@@ -156,7 +156,9 @@ const updateUser = async (req, res) => {
   const userId = req.user._id;
   try {
     if (req.params.id !== userId.toString()) {
-      return res.status(400).json({ error: "You cannot update other user's profile" });
+      return res
+        .status(400)
+        .json({ error: "You cannot update other user's profile" });
     }
 
     let updates = {};
@@ -177,7 +179,6 @@ const updateUser = async (req, res) => {
       updates.profilepic = uploadedResponse.secure_url;
     }
 
-    
     if (name) updates.name = name;
     if (email) updates.email = email;
     if (username) updates.username = username;
@@ -187,6 +188,17 @@ const updateUser = async (req, res) => {
 
     // password should be null in response
     user.password = null;
+    // Find all posts that this user replied and update username and userProfilePic fields
+    await Post.updateMany(
+      { "replies.userId": userId },
+      {
+        $set: {
+          "replies.$[reply].username": user.username,
+          "replies.$[reply].userProfilePic": user.profilePic,
+        },
+      },
+      { arrayFilters: [{ "reply.userId": userId }] }
+    );
 
     res.status(200).json(user);
   } catch (err) {
@@ -196,17 +208,7 @@ const updateUser = async (req, res) => {
 };
 
 
-    // Find all posts that this user replied and update username and userProfilePic fields
-    // await Post.updateMany(
-    //   { "replies.userId": userId },
-    //   {
-    //     $set: {
-    //       "replies.$[reply].username": user.username,
-    //       "replies.$[reply].userProfilePic": user.profilePic,
-    //     },
-    //   },
-    //   { arrayFilters: [{ "reply.userId": userId }] }
-    // );
+   
 
     // password should be null in response
     

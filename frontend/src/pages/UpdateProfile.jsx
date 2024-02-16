@@ -81,7 +81,7 @@ export default function UpdateProfilePage() {
                     <FormControl id='userName'>
                         <Stack direction={["column", "row"]} spacing={6}>
                             <Center>
-                                <Avatar size='xl' boxShadow={"md"} src={imgUrl } />
+                                <Avatar size='xl' boxShadow={"md"} src={imgUrl || user.profilePic} />
                             </Center>
                             <Center w='full'>
                                 <Button w='full' onClick={() => fileRef.current.click()}>
