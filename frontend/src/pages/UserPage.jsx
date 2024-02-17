@@ -4,6 +4,7 @@ import UserHeader from '../components/UserHeader'
 import UserPost from '../components/UserPost'
 import { useParams } from 'react-router-dom';
 import useShowToast from '../Hooks/useShowToast';
+import { Text } from '@chakra-ui/react';
 
 const UserPage = () => {
   const[user,setUser]=useState(null);
@@ -24,14 +25,14 @@ const UserPage = () => {
       }
       catch(e){
         console.log(e)
-        showToast("Error", error, "error")
+        showToast("Error", e, "error")
       }
     } 
     getUser();
   },[username,showToast])
 
   if(!user)
-  return null;
+  return <h1>User Not Found</h1>;
 
   return (
     <div>
