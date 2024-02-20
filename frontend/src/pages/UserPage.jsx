@@ -4,10 +4,13 @@ import UserHeader from '../components/UserHeader'
 import UserPost from '../components/UserPost'
 import { useParams } from 'react-router-dom';
 import useShowToast from '../Hooks/useShowToast';
-import { Text } from '@chakra-ui/react';
+import { Flex, Spinner, Text } from '@chakra-ui/react';
+import Post from '../components/Posts';
 
 const UserPage = () => {
   const[user,setUser]=useState(null);
+  const [posts,setPosts]=useState([])
+  const[fetching,setFetching]=useState(true)
   const showToast=useShowToast()
   const {username}=useParams()
   useEffect(()=>{
@@ -28,6 +31,26 @@ const UserPage = () => {
         showToast("Error", e, "error")
       }
     } 
+      const getPosts=async()=>{
+        setFetching(true)
+        try{
+          const res=await fetch(`/api/posts/user/${username}`)
+          const data= await res.json();
+          console.log(data)
+          setPosts(data)
+        }
+        catch(e){
+          showToast("Error",e,"error")
+          setPosts([])
+        }
+        finally{
+          setFetching(false)
+        }
+
+      }
+
+
+      getPosts()
     getUser();
   },[username,showToast])
 
@@ -37,11 +60,16 @@ const UserPage = () => {
   return (
     <div>
       <UserHeader user={user}/>
+      {!fetching&& posts.length===0&&<Text m={26} p={12} size={"xxl"}>No posts to show 😥</Text>}
+      {fetching&&
+      <Flex justifyContent={"center"} my={12}>
+        <Spinner size={"xl"}/>
+        </Flex>}
+
+        {posts.map((post)=>(
+          <Post key={post._id} post={post} postedBy={post.postedBy}/>
+        ))}
       
-      <UserPost likes={1200} replies={481} postImg="/public/Post-1.jpg" postTitle="Im just a baby doggo" date="1d" />
-      <UserPost likes={1892} replies={231} postImg="/public/Post-2.jpg" postTitle="Its You And Me" date="3d"/>
-      <UserPost likes={1110} replies={876} postImg="/public/Post-3.jpg" postTitle="What every One should have" date="1w" />
-      <UserPost likes={700} replies={412}  postTitle="What's Up Bitches?" date="2w"/>
       
     </div>
   )

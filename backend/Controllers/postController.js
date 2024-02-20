@@ -167,7 +167,7 @@ const getUserPosts = async (req, res) => {
     }
 
     const posts = await Post.find({ postedBy: user._id }).sort({
-      createdAt: -1,
+      createdAt: -1,//descending order
     });
 
     res.status(200).json(posts);

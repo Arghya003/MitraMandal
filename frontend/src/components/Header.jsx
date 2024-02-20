@@ -24,7 +24,7 @@ const Header = () => {
             alt="logo"
             src={colorMode === "dark" ? "/light-logo.svg" : "/dark-logo.svg"} />
         {user && (
-          <Link ink as={RouterLink} to={`/${user.username}`}>
+          <Link  as={RouterLink} to={`/${user.username}`}>
             <RxAvatar size={26} />
 
           </Link>

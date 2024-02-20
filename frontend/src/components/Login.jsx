@@ -63,6 +63,8 @@ export default function LoginCard() {
         >
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>
+                    <h2>Click on The Logo to change</h2>
+
                     <Heading fontSize={'4xl'} textAlign={'center'}>
                         Login
                     </Heading>
