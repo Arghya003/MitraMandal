@@ -38,7 +38,7 @@ const UserHeader = ({user}) => {
   };
   const currentUser = useRecoilValue(userAtom);
   const[following,setFollowing]=useState(user.followers.includes(currentUser._id))
-  console.log(following)
+  //console.log(following)
   
   
  
@@ -62,7 +62,7 @@ const UserHeader = ({user}) => {
               showToast("Error", data.error, "error")
               return;
             }
-            console.log(data)
+           // console.log(data)
             setFollowing(!following)
 
 

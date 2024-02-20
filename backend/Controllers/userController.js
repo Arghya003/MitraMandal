@@ -8,19 +8,19 @@ import mongoose from "mongoose";
 const getUserProfile = async (req, res) => {
   // We will fetch user profile either with username or userId
   // query is either username or userId
-  const { username} = req.params;
+  const { query } = req.params;
 
   try {
     let user;
 
     // query is userId
-    if (mongoose.Types.ObjectId.isValid(username)) {
+    if (mongoose.Types.ObjectId.isValid(query)) {
       user = await User.findOne({ _id: query })
         .select("-password")
         .select("-updatedAt");
     } else {
       // query is username
-      user = await User.findOne({ username})
+      user = await User.findOne({ username: query })
         .select("-password")
         .select("-updatedAt");
     }
@@ -33,6 +33,7 @@ const getUserProfile = async (req, res) => {
     console.log("Error in getUserProfile: ", err.message);
   }
 };
+
 
 const signupUser = async (req, res) => {
   try {

@@ -15,7 +15,7 @@ const UserPage = () => {
       try{
           const res= await fetch(`/api/users/profile/${username}`);
           const data=await res.json();
-          console.log(data)
+        //  console.log(data)
 
           if(data.error){
               showToast("Error",data.error,"error")
