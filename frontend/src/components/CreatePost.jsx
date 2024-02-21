@@ -94,7 +94,8 @@ const CreatePost = () => {
                 onClick={onOpen}
                 size={{ base: "sm", sm: "md" }}
             >
-                <AddIcon />
+                <AddIcon mr={2} />
+                Post
             </Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
@@ -110,7 +111,7 @@ const CreatePost = () => {
                                 onChange={handleTextChange}
                                 value={postText}
                             />
-                            <Text fontSize='xs' fontWeight='bold' textAlign={"right"} m={"1"} color={"gray.800"}>
+                            <Text fontSize='xs' fontWeight='bold' textAlign={"right"} m={"1"} color={"gray.400"}>
                                 {remainingChar}/{MAX_CHAR}
                             </Text>
 
