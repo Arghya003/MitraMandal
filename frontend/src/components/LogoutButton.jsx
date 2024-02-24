@@ -4,8 +4,10 @@ import { useSetRecoilState } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import useShowToast from '../Hooks/useShowToast'
 import { FiLogOut } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom'
 const LogoutButton = () => {
    const showToast=useShowToast()
+   const navigate=useNavigate()
     const setUser=useSetRecoilState(userAtom)
     const handleLogout=async()=>{
         try{
@@ -22,8 +24,9 @@ const LogoutButton = () => {
                     showToast("Error", data.error, "error")
                 }
                 localStorage.removeItem("user-threads")
-
+                  
                 setUser(null)
+                navigate("/auth")
            
         }
         catch(e){

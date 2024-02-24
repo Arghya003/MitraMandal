@@ -6,10 +6,12 @@ import { useParams } from 'react-router-dom';
 import useShowToast from '../Hooks/useShowToast';
 import { Flex, Spinner, Text } from '@chakra-ui/react';
 import Post from '../components/Posts';
+import { useRecoilState } from 'recoil';
+import postsAtom from '../atoms/postAtom';
 
 const UserPage = () => {
   const[user,setUser]=useState(null);
-  const [posts,setPosts]=useState([])
+  const [posts,setPosts]=useRecoilState(postsAtom)
   const[fetching,setFetching]=useState(true)
   const showToast=useShowToast()
   const {username}=useParams()
@@ -52,7 +54,7 @@ const UserPage = () => {
 
       getPosts()
     getUser();
-  },[username,showToast])
+  },[username,showToast,setPosts])
 
   if(!user)
   return <h1>User Not Found</h1>;
@@ -67,7 +69,7 @@ const UserPage = () => {
         </Flex>}
 
         {posts.map((post)=>(
-          <Post key={post._id} post={post} postedBy={post.postedBy}/>
+          <Post key={post._id} post={post} postedBy={post.postedBy}setPosts={setPosts}/>
         ))}
       
       

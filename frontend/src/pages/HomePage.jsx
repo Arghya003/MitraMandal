@@ -1,13 +1,14 @@
 import { Button, Flex,Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import useShowToast from '../Hooks/useShowToast'
 import Posts from '../components/Posts'
+import postsAtom from '../atoms/postAtom'
 
 const HomePage = () => {
-const [posts,setPosts]=useState([])
+const [posts,setPosts]=useRecoilState(postsAtom)
 const user=useRecoilValue(userAtom)
 const showToast=useShowToast()
 
@@ -31,7 +32,7 @@ const showToast=useShowToast()
             }
           }
           getFeedPosts()
-      },[showToast])
+      },[showToast,setPosts])
       
   return (
    <>

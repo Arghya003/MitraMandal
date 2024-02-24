@@ -73,9 +73,8 @@ const CreatePost = () => {
                 return;
             }
             showToast("Success", "Post created successfully", "success");
-            if (username === user.username) {
-                setPosts([data, ...posts]);
-            }
+                           setPosts([data, ...posts]);
+            
             onClose();
             setPostText("");
             setImgUrl("");

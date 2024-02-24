@@ -1,5 +1,5 @@
 import { Avatar, Flex ,Text,Image,Box, Divider, Button, Spinner} from "@chakra-ui/react"
-import { BsThreeDots } from "react-icons/bs"
+
 import Actions from "../components/Actions"
 import { useEffect, useState } from "react"
 import Comment from "../components/Comment"
@@ -16,9 +16,10 @@ import postsAtom from "../atoms/postAtom"
 
 
 const PostPage = () => {
+  const [posts,setPosts]=useRecoilState(postsAtom)
 
   const {user,loading}=useGetUserProfile()
-  const[posts,setPosts]=useState(postsAtom)
+  const[post,setPost]=useState(postsAtom)
   const {pid}=useParams()
   const currentUser=useRecoilValue(userAtom);
   const navigate=useNavigate()
@@ -81,6 +82,7 @@ const PostPage = () => {
     <Flex w={"full"} alignItems={"center"} gap={3}>
       <Avatar src={user.profilePic} size={"md"} name={user.username}/>
       <Flex>
+        
         <Text fontSize={"sm"} fontWeight={"bold"}>{user.username}</Text>
         <Image src="/public/verified.png" w={4} h={4} ml={1}/>
       </Flex>
