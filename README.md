@@ -1,2 +1,3 @@
-# Threads-Clone
-Threads-Clone made Using MERN
+# Mitra Mandal
+Social Media application made Using MERN
+
