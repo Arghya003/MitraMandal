@@ -9,7 +9,7 @@ import postsAtom from '../atoms/postAtom'
 
 const HomePage = () => {
 const [posts,setPosts]=useRecoilState(postsAtom)
-const user=useRecoilValue(userAtom)
+
 const showToast=useShowToast()
 
       useEffect(()=>{
@@ -37,10 +37,8 @@ const showToast=useShowToast()
   return (
    <>
    {
-    posts.length===0?<Text ml={12} bg={"gray.900"} color={"gray.300","gray.300"}w={"half"}>Follow Users to See Feed Posts</Text>:
-    <h1>
-
-    </h1>
+    posts.length===0?<Text ml={12} bg={"gray.900"} color={"gray.300","gray.600"}w={"half"}>Follow Users to See Feed Posts</Text>:null
+    
     }
 {posts.map((post)=>(
   <Posts key={post._id} post ={post} postedBy={post.postedBy}/>

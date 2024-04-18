@@ -12,7 +12,7 @@ const styles={
 
     body:{
       color:mode("gray.800","whiteAlpha.900")(props),
-      bg:mode('gray.100','#101010')(props),
+      bg:mode('gray.100','#0f1525')(props),
 
     }
   })

@@ -98,7 +98,7 @@ const UserHeader = ({user}) => {
               p={1}
               borderRadius={"full"}
             >
-              threads.net
+             
             </Text>
           </Flex>
         </Box>
@@ -138,13 +138,13 @@ const UserHeader = ({user}) => {
       )}
       <Flex width={"full"} justifyContent={"space-between"}>
         <Flex gap={2} alignItems={"center"}>
-          <Text color={"gray.light"}>{user.followers.length}</Text>
+          <Text color={"gray.light"}>{user.followers.length} Followers</Text>
           <Box w="1" h="1" bg={"gray.light"} borderRadius={"full"}></Box>
-                  <Link color={"gray.light"}>instagram.com</Link>
+                
         </Flex>
         <Flex gap={4}>
           <Box>
-            <BsInstagram size={24} cursor={"pointer"} />
+           
           </Box>
           <Menu>
             <MenuButton>
@@ -162,11 +162,9 @@ const UserHeader = ({user}) => {
       </Flex>
       <Flex w={"full"}>
         <Flex flex={1} borderBottom={"1.5px solid white"} justifyContent={"center"} pb="3" cursor={"pointer"}>
-          <Text>Threads</Text>
+          <Text>Posts</Text>
         </Flex>
-              <Flex flex={1} borderBottom={"1.5px solid gray"} color={"gray.light"} justifyContent={"center"} pb="3" cursor={"pointer"}>
-                  <Text>Replies</Text>
-              </Flex>
+              
        
       </Flex>
     </VStack>
